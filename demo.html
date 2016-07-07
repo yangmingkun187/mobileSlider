@@ -3,19 +3,47 @@
 <head>
     <meta charset="UTF-8">
     <title>Document</title>
+    <link rel="stylesheet" href="css/demo.scss?__inline">
 </head>
 <body>
     <div class="slider-container">
         <div class="slider-wrapper">
-            <div class="slider-item"></div>
-            <div class="slider-item"></div>
-            <div class="slider-item"></div>
+            <div class="slider-item">
+                <img src="http://images.simpletour.com/simpletour/images/wechat_home/783ca3272f455de77c64bf88e1bf848c.png!middle320" alt="">
+            </div>
+            <div class="slider-item">
+                <img src="http://images.simpletour.com/simpletour/images/wechat_home/c7070e2e372ef9260282aa2820a240ee.jpg!middle320" alt="">
+            </div>
+            <div class="slider-item">
+                <img src="http://images.simpletour.com/simpletour/images/wechat_home/9f574b53c536836d75228860fbe0bce9.png!middle320" alt="">
+            </div>
         </div>
         <div class="slider-pagination"></div>
     </div>
     <script src="lib/zepto.min.js"></script>
     <script src="js/mobileSlider.js"></script>
     <script>
+        (function (doc, win) {
+            var docEl = doc.documentElement,
+                    resizeEvt = 'orientationchange' in window ? 'orientationchange' : 'resize',
+                    recalc = function () {
+                        var clientWidth = docEl.clientWidth;
+                        if (!clientWidth) return;
+                        var style;
+                        if (style = document.getElementById("forhtml")) {
+                            style.parentNode.removeChild(style);
+                        }
+                        style = document.createElement("style");
+                        style.id = "forhtml";
+                        document.head.appendChild(style);
+                        style.appendChild(document.createTextNode("html{font-size:" + 20 * (clientWidth / 320) + "px !important;}"));
+                        docEl.style.fontSize = 20 * (clientWidth / 320) + 'px';
+                    };
+            recalc();
+            if (!doc.addEventListener) return;
+            win.addEventListener(resizeEvt, recalc, false);
+            doc.addEventListener('DOMContentLoaded', recalc, false);
+        })(document, window);
         $.slider();
     </script>
 </body>
