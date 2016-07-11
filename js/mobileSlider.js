@@ -48,12 +48,23 @@
             if (typeof slideIndex === 'undefined') slideIndex = 0;
             if(slideIndex < 0) slideIndex = 0;
             var translate = s.sliderPositions[slideIndex];
-            if(translate == s.sliderPositions[2] || translate == s.sliderPositions[s.sliderPositions.length - 2]) {
+            if(startTranslate == s.sliderPositions[s.sliderPositions.length - 1] && translate == s.sliderPositions[2]) {
+                s.setWrapperTranstion(0);
+            } else if(startTranslate == 0 && translate == s.sliderPositions[s.sliderPositions.length - 2]) {
                 s.setWrapperTranstion(0);
             } else {
                 s.setWrapperTranstion(300);
             }
             s.setWrapperTranslate(translate);
+
+            if(translate == s.sliderPositions[s.sliderPositions.length - 1]) {
+                s.setWrapperTranstion(0);
+                s.setWrapperTranslate(s.sliderPositions[1]);
+            }
+            if(translate == s.sliderPositions[0]) {
+                s.setWrapperTranstion(0);
+                s.setWrapperTranslate(s.sliderPositions.length - 2);
+            }
             // setTimeout(s.setWrapperTranstion(0),1000);
         };
         // 设置wrapper的transform效果
