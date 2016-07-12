@@ -42,6 +42,14 @@
             document.querySelector(o.className).addEventListener('touchstart', s.onTouchStart, false);
             document.querySelector(o.className).addEventListener('touchmove', s.onTouchmove, false);
             document.querySelector(o.className).addEventListener('touchend', s.onTouchEnd, false);
+            
+            // 绑定点击事件
+            $(document).on('tap', '.slider-item img', function (e) {
+                e.preventDefault();
+                if (Math.abs(endObj.x) < 2 && Math.abs(endObj.y) < 2) {
+                    location.href = $(this).attr('data-href');
+                }
+            });
             s.setWrapperTranstion(0);
             s.setWrapperTranslate(-s.width);
         };
@@ -88,6 +96,8 @@
             currentTranslate,
             newTranslate,
             startTranslate;
+        var startObj = {x: 0, y: 0};
+        var endObj = {x: 0, y: 0};
         s.touches = {
             startX: 0,
             startY: 0,
@@ -99,11 +109,18 @@
             if (e.originalEvent) e = e.originalEvent;
             isTouchEvent = e.type === 'touchstart';
             if (!isTouchEvent && 'which' in e && e.which === 3) return;
+
             isMoved = false;
             isTouched = true;
+            startObj.x = event.touches[0].pageX;
+            startObj.y = event.touches[0].pageY;
+            endObj.x = 0;
+            endObj.y = 0;
+
             var startX = s.touches.currentX = e.type === 'touchstart' ? e.targetTouches[0].pageX : e.pageX;
             var startY = s.touches.currentY = e.type === 'touchstart' ? e.targetTouches[0].pageY : e.pageY;
 
+            // 这里是将复制出来的尽头元素移到原本的元素位置
             newTranslate = s.getWrapperTranslate(s.$wrapper[0]);
             if(newTranslate == s.sliderPositions[s.sliderPositions.length - 1]) {
                 s.setWrapperTranstion(0);
@@ -123,10 +140,13 @@
 
             var diff = s.touches.diff = s.touches.currentX - s.touches.startX;
 
+            // 这里使用isMoved来防止移动过程中s.getWrapperTranslate()函数一直执行消耗性能
             if(!isMoved) {
                 startTranslate = s.getWrapperTranslate(s.$wrapper[0]);
             }
             isMoved = true;
+            endObj.x = event.touches[0].pageX - startObj.x;
+            endObj.y = event.touches[0].pageY - startObj.y;
 
             currentTranslate = -diff + startTranslate;
 
