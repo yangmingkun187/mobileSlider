@@ -1,12 +1,5 @@
-* {
-  margin: 0;
-  padding: 0;
-}
-body, html {
-  width: 100%;
-  height: 100%;
-  font-size: 20px;
-}
+*{margin:0;padding:0;-webkit-tap-highlight-color:rgba(255,255,255,0);font-family:Helvetica,sans-serif}a:active,a:hover,a:link,a:visited{text-decoration:none;outline:0}body,html{width:100%;height:100%}body{box-sizing:border-box;background-color:#f6f6f6}header{height:2rem;width:100%;display:-webkit-box;display:-ms-flexbox;display:-webkit-flex;display:flex;display:-moz-flex;-webkit-box-orient:horizontal;-ms-box-orient:horizontal;-moz-box-orient:horizontal;-webkit-flex-flow:row nowrap;-ms-flex-flow:row nowrap;flex-flow:row nowrap;background-color:#d71345;position:relative;z-index:11}header .back{width:1.55rem;height:100%;background:url(/images/back.png) no-repeat center;background-size:.45rem .8rem;text-indent:-9999px}header .back.no-icon{background:0 0}header .center{-moz-flex:1;-webkit-box-flex:1;-webkit-flex:1;-ms-flex:1;flex:1;font-size:.8rem;color:#fff;line-height:2rem;text-align:center}header .home{text-indent:-9999px;height:100%;width:1.9rem;background:url(/images/admin.png?1) no-repeat center;background-size:.85rem .85rem}
+.main-wrapper{width:100%;height:100%;position:relative;overflow:hidden}
 .slider-container{
   margin: 0 auto;
   position: relative;

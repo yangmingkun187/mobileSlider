@@ -47,7 +47,7 @@
             $(document).on('tap', '.slider-item img', function (e) {
                 e.preventDefault();
                 if (Math.abs(endObj.x) < 2 && Math.abs(endObj.y) < 2) {
-                    o.clickEvent();
+                    o.clickEvent($(this));
                 }
             });
             s.setWrapperTranstion(0);
@@ -144,6 +144,7 @@
             }
         };
         s.onTouchmove = function(e) {
+            e.preventDefault();
             if (e.originalEvent) e = e.originalEvent;
             if (isTouchEvent && e.type === 'mousemove') return;
 

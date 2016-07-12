@@ -5,8 +5,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
     <title>Document</title>
     <link rel="stylesheet" href="css/demo.scss?__inline">
+    <style>
+        .slider-container {
+            height: 8rem
+        }
+    </style>
 </head>
 <body>
+<div class="main-wrapper">
+    <header>
+        <div class="back no-icon">后退</div>
+        <div class="center">订购</div>
+        <div class="home">个人中心</div>
+    </header>
     <div class="slider-container">
         <div class="slider-wrapper">
             <div class="slider-item">
@@ -27,6 +38,7 @@
         </div>
         <div class="slider-pagination"></div>
     </div>
+</div>
     <script src="lib/zepto.min.js"></script>
     <script src="js/mobileSlider.js"></script>
     <script>
@@ -52,7 +64,10 @@
             doc.addEventListener('DOMContentLoaded', recalc, false);
         })(document, window);
         $.slider({
-            pagination: true
+            pagination: true,
+            clickEvent: function($this) {
+                location.href = $this.attr('data-href');
+            }
         });
     </script>
 </body>
