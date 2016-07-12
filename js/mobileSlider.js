@@ -23,22 +23,11 @@
             $slideItem.eq(i).attr('data-slider-index',i);
             $slideItem.eq(i).css('width',s.width);
         }
-        s.toHtml = function() {
-            // 是否需要pagination
-            o.pagination && $('.slider-pagination').append(s.paginationHtml);
-            $('.slider-wrapper').prepend($slideItem.eq(-1).clone()).append($slideItem.eq(0).clone());
-            
-            // 因为新增了clone出来的两个item,所以这里需要再取一次
-            s.slideItem = $(o.className + ' .slider-wrapper .slider-item');
-            for(var i = 0, len = s.slideItem.length; i < len; i++) {
-                s.sliderPositions.push(-s.width * i);
-            }
-            // 给两个clone出来的item增加辨识的class
-            s.slideItem.eq(0).addClass('slider-duplicate');
-            s.slideItem.eq(1).addClass('active');
-            s.slideItem.eq(-1).addClass('slider-duplicate');
-        };
+        /* =============================
+         ***** slider 初始化一些东西  *****
+         =============================== */
         s.init = function() {
+            s.toHtml();
             document.querySelector(o.className).addEventListener('touchstart', s.onTouchStart, false);
             document.querySelector(o.className).addEventListener('touchmove', s.onTouchmove, false);
             document.querySelector(o.className).addEventListener('touchend', s.onTouchEnd, false);
@@ -53,17 +42,43 @@
             s.setWrapperTranstion(0);
             s.setWrapperTranslate(-s.width);
         };
-        // 设置wrapper的transform效果
+        /* =============================
+         ***** 转化html  *****
+         =============================== */
+        s.toHtml = function() {
+            // 是否需要pagination
+            o.pagination && $('.slider-pagination').append(s.paginationHtml);
+            $('.slider-wrapper').prepend($slideItem.eq(-1).clone()).append($slideItem.eq(0).clone());
+
+            // 因为新增了clone出来的两个item,所以这里需要再取一次
+            s.slideItem = $(o.className + ' .slider-wrapper .slider-item');
+            for(var i = 0, len = s.slideItem.length; i < len; i++) {
+                s.sliderPositions.push(-s.width * i);
+            }
+            // 给两个clone出来的item增加辨识的class
+            s.slideItem.eq(0).addClass('slider-duplicate');
+            s.slideItem.eq(1).addClass('active');
+            s.slideItem.eq(-1).addClass('slider-duplicate');
+        };
+        /* =============================
+         ***设置wrapper的transform效果***
+         =============================== */
         s.setWrapperTranslate = function(translate) {
             s.$wrapper.css({
                 "transform": "translate3d(" + translate + "px, 0px, 0px);"
             })
         };
+        /* =============================
+         ***设置wrapper的transform的时间延迟***
+         =============================== */
         s.setWrapperTranstion = function(duration) {
             s.$wrapper.css({
                 "transition-duration": duration+"ms;"
             })
         };
+        /* =============================
+         ***设置Pagination效果***
+         =============================== */
         s.setPaginationActive = function(index) {
             var $paginationItem = $('.slider-pagination .slider-pagination-item');
 
@@ -76,6 +91,9 @@
                 $paginationItem.eq(index-1).addClass('active');
             }
         };
+        /* =============================
+         ***获取wrapper的Translate***
+         =============================== */
         s.getWrapperTranslate = function(el) {
             var curStyle = window.getComputedStyle(el, null);
             var transformMatrix, matrix;
@@ -101,13 +119,26 @@
             }
             return curTransform;
         };
-        //
+        /* =============================
+         ***slide的变化函数***
+         =============================== */
+        s.slideTo = function(slideIndex) {
+            if (typeof slideIndex === 'undefined') slideIndex = 0;
+            if(slideIndex < 0) slideIndex = 0;
+            var translate = s.sliderPositions[slideIndex];
+
+            s.setPaginationActive(slideIndex);
+            s.setWrapperTranstion(300);
+            s.setWrapperTranslate(translate);
+        };
+        
         var isTouched,
             isMoved,
             isTouchEvent,
             currentTranslate,
             newTranslate,
             startTranslate;
+        // startObj endObj两个参数是防止滑动过程中不小心出发点击事件
         var startObj = {x: 0, y: 0};
         var endObj = {x: 0, y: 0};
         s.touches = {
@@ -132,7 +163,7 @@
             var startX = s.touches.currentX = e.type === 'touchstart' ? e.targetTouches[0].pageX : e.pageX;
             var startY = s.touches.currentY = e.type === 'touchstart' ? e.targetTouches[0].pageY : e.pageY;
 
-            // 这里是将复制出来的尽头元素移到原本的元素位置
+            // 这里是将复制出来的尽头元素移到原本的元素位置,更平滑的实现左右滑动
             newTranslate = s.getWrapperTranslate(s.$wrapper[0]);
             if(newTranslate == s.sliderPositions[s.sliderPositions.length - 1]) {
                 s.setWrapperTranstion(0);
@@ -182,21 +213,10 @@
                 s.slideItem.eq(index - 1).addClass('active');
             }
         };
-        s.slideTo = function(slideIndex) {
-            if (typeof slideIndex === 'undefined') slideIndex = 0;
-            if(slideIndex < 0) slideIndex = 0;
-            var translate = s.sliderPositions[slideIndex];
-
-            s.setPaginationActive(slideIndex);
-            s.setWrapperTranstion(300);
-            s.setWrapperTranslate(translate);
-        };
-
     }
     
     $.slider = function(option){
         var slider = new Slider(option);
         slider.init();
-        slider.toHtml();
     };
 })(Zepto);
