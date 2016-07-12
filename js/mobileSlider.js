@@ -43,6 +43,12 @@
             s.setWrapperTranslate(-s.width);
         };
         /* =============================
+         ***** autoPlay  *****
+         =============================== */
+        s.autoPlay= function() {
+
+        };
+        /* =============================
          ***** 转化html  *****
          =============================== */
         s.toHtml = function() {
@@ -193,7 +199,7 @@
             endObj.y = event.touches[0].pageY - startObj.y;
 
             currentTranslate = -diff + startTranslate;
-
+            s.setWrapperTranstion(0);
             s.setWrapperTranslate(currentTranslate);
         };
         s.onTouchEnd = function(e) {
