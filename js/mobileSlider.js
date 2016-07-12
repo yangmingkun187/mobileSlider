@@ -42,30 +42,8 @@
             document.querySelector(o.className).addEventListener('touchstart', s.onTouchStart, false);
             document.querySelector(o.className).addEventListener('touchmove', s.onTouchmove, false);
             document.querySelector(o.className).addEventListener('touchend', s.onTouchEnd, false);
+            s.setWrapperTranstion(0);
             s.setWrapperTranslate(-s.width);
-        };
-        s.slideTo = function(slideIndex) {
-            if (typeof slideIndex === 'undefined') slideIndex = 0;
-            if(slideIndex < 0) slideIndex = 0;
-            var translate = s.sliderPositions[slideIndex];
-            if(startTranslate == s.sliderPositions[s.sliderPositions.length - 1] && translate == s.sliderPositions[2]) {
-                s.setWrapperTranstion(0);
-            } else if(startTranslate == 0 && translate == s.sliderPositions[s.sliderPositions.length - 2]) {
-                s.setWrapperTranstion(0);
-            } else {
-                s.setWrapperTranstion(300);
-            }
-            s.setWrapperTranslate(translate);
-
-            if(translate == s.sliderPositions[s.sliderPositions.length - 1]) {
-                s.setWrapperTranstion(0);
-                s.setWrapperTranslate(s.sliderPositions[1]);
-            }
-            if(translate == s.sliderPositions[0]) {
-                s.setWrapperTranstion(0);
-                s.setWrapperTranslate(s.sliderPositions.length - 2);
-            }
-            // setTimeout(s.setWrapperTranstion(0),1000);
         };
         // 设置wrapper的transform效果
         s.setWrapperTranslate = function(translate) {
@@ -108,6 +86,7 @@
             isMoved,
             isTouchEvent,
             currentTranslate,
+            newTranslate,
             startTranslate;
         s.touches = {
             startX: 0,
@@ -124,6 +103,16 @@
             isTouched = true;
             var startX = s.touches.currentX = e.type === 'touchstart' ? e.targetTouches[0].pageX : e.pageX;
             var startY = s.touches.currentY = e.type === 'touchstart' ? e.targetTouches[0].pageY : e.pageY;
+
+            newTranslate = s.getWrapperTranslate(s.$wrapper[0]);
+            if(newTranslate == s.sliderPositions[s.sliderPositions.length - 1]) {
+                s.setWrapperTranstion(0);
+                s.setWrapperTranslate(s.sliderPositions[1]);
+            }
+            if(newTranslate == s.sliderPositions[0]) {
+                s.setWrapperTranstion(0);
+                s.setWrapperTranslate(s.sliderPositions[s.sliderPositions.length - 2]);
+            }
         };
         s.onTouchmove = function(e) {
             if (e.originalEvent) e = e.originalEvent;
@@ -151,21 +140,22 @@
                     index = i;
                 }
             }
-            s.slideItem.removeClass('active');
-            if(s.touches.diff > 0) {
-                if(index == s.sliderPositions.length - 1) {
-                    s.slideTo(2);
-                } else {
-                    s.slideTo(index + 1);
-                }
-            } else {
-                if(index == 0) {
-                    s.slideTo(s.sliderPositions.length - 2);
-                } else {
-                    s.slideTo(index - 1);
-                }
+            if(s.touches.diff > 20) {
+                s.slideTo(index + 1);
+            } else if(s.touches.diff < -20) {
+                s.slideTo(index - 1);
             }
         }
+        s.slideTo = function(slideIndex) {
+            if (typeof slideIndex === 'undefined') slideIndex = 0;
+            if(slideIndex < 0) slideIndex = 0;
+            var translate = s.sliderPositions[slideIndex];
+
+            s.setWrapperTranstion(300);
+            s.setWrapperTranslate(translate);
+
+            // setTimeout(s.setWrapperTranstion(0),1000);
+        };
 
     }
     
