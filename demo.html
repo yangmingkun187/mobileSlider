@@ -18,6 +18,12 @@
             <div class="slider-item">
                 <img src="http://images.simpletour.com/simpletour/images/wechat_home/9f574b53c536836d75228860fbe0bce9.png!middle320" alt="">
             </div>
+            <div class="slider-item">
+                <img src="http://images.simpletour.com/simpletour/images/wechat_home/a090f59504cbc9fe64c0e7c3ce3e531f.jpg!middle320" alt="">
+            </div>
+            <div class="slider-item">
+                <img src="http://images.simpletour.com/simpletour/images/wechat_home/912285dfb8cc1729eaf6e77d5ccd20bc.jpg!middle320" alt="">
+            </div>
         </div>
         <div class="slider-pagination"></div>
     </div>
@@ -45,7 +51,9 @@
             win.addEventListener(resizeEvt, recalc, false);
             doc.addEventListener('DOMContentLoaded', recalc, false);
         })(document, window);
-        $.slider();
+        $.slider({
+            pagination: true
+        });
     </script>
 </body>
 </html>

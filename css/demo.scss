@@ -41,4 +41,30 @@ body, html {
       }
     }
   }
+  .slider-pagination {
+    position: absolute;
+    bottom: .5rem;
+    left: 0;
+    width: 100%;
+    text-align: center;
+    -webkit-transition: .3s;
+    transition: .3s;
+    -webkit-transform: translate3d(0,0,0);
+    -ms-transform: translate3d(0,0,0);
+    transform: translate3d(0,0,0);
+    z-index: 10;
+    .slider-pagination-item {
+      width: .4rem;
+      height: .4rem;
+      margin: 0 .2rem;
+      display: inline-block;
+      border-radius: 100%;
+      background: #000;
+      opacity: .2;
+      &.active{
+        opacity: 1;
+        background-color: #fff;
+      }
+    }
+  }
 }

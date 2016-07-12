@@ -19,7 +19,7 @@
         s.width = s.$container.width();
 
         for(var i = 0, len = $slideItem.length; i < len; i++) {
-            s.paginationHtml += '<span class="slider-pagination-item"></span>';
+            s.paginationHtml += i == 0 ? '<span class="slider-pagination-item active"></span>': '<span class="slider-pagination-item"></span>';
             $slideItem.eq(i).attr('data-slider-index',i);
             $slideItem.eq(i).css('width',s.width);
         }
@@ -47,7 +47,7 @@
             $(document).on('tap', '.slider-item img', function (e) {
                 e.preventDefault();
                 if (Math.abs(endObj.x) < 2 && Math.abs(endObj.y) < 2) {
-                    location.href = $(this).attr('data-href');
+                    o.clickEvent();
                 }
             });
             s.setWrapperTranstion(0);
@@ -63,6 +63,18 @@
             s.$wrapper.css({
                 "transition-duration": duration+"ms;"
             })
+        };
+        s.setPaginationActive = function(index) {
+            var $paginationItem = $('.slider-pagination .slider-pagination-item');
+
+            $paginationItem.removeClass('active');
+            if(index == 0) {
+                $paginationItem.eq($paginationItem.length-1).addClass('active');
+            } else if(index == s.sliderPositions.length - 1) {
+                $paginationItem.eq(0).addClass('active');
+            } else {
+                $paginationItem.eq(index-1).addClass('active');
+            }
         };
         s.getWrapperTranslate = function(el) {
             var curStyle = window.getComputedStyle(el, null);
@@ -160,21 +172,23 @@
                     index = i;
                 }
             }
+            s.slideItem.removeClass('active');
             if(s.touches.diff > 20) {
                 s.slideTo(index + 1);
+                s.slideItem.eq(index + 1).addClass('active');
             } else if(s.touches.diff < -20) {
                 s.slideTo(index - 1);
+                s.slideItem.eq(index - 1).addClass('active');
             }
-        }
+        };
         s.slideTo = function(slideIndex) {
             if (typeof slideIndex === 'undefined') slideIndex = 0;
             if(slideIndex < 0) slideIndex = 0;
             var translate = s.sliderPositions[slideIndex];
 
+            s.setPaginationActive(slideIndex);
             s.setWrapperTranstion(300);
             s.setWrapperTranslate(translate);
-
-            // setTimeout(s.setWrapperTranstion(0),1000);
         };
 
     }
