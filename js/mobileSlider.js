@@ -41,12 +41,32 @@
             });
             s.setWrapperTranstion(0);
             s.setWrapperTranslate(-s.width);
+
+            if(o.autoPlay) s.autoPlay();
         };
         /* =============================
          ***** autoPlay  *****
          =============================== */
-        s.autoPlay= function() {
-
+        var autoPlayIndex = 2;
+        s.autoPlay = function() {
+            var autoPlayTimes = typeof o.autoPlay === 'number' ? o.autoPlay : 4000;
+            var myTime = setInterval(function() {
+                s.slideItem.removeClass('active');
+                if(autoPlayIndex == s.sliderPositions.length - 1) {
+                    s.slideTo(autoPlayIndex);
+                    setTimeout(function() {
+                        s.setWrapperTranstion(0);
+                        s.setWrapperTranslate(s.sliderPositions[1]);
+                    },300);
+                    autoPlayIndex = 2;
+                    s.slideItem.eq(1).addClass('active');
+                } else{
+                    s.slideTo(autoPlayIndex);
+                    s.slideItem.eq(autoPlayIndex).addClass('active');
+                    autoPlayIndex++;
+                }
+                console.log(autoPlayIndex);
+            }, autoPlayTimes);
         };
         /* =============================
          ***** 转化html  *****
