@@ -47,13 +47,18 @@
         /* =============================
          ***** autoPlay  *****
          =============================== */
-        var autoPlayIndex = 2;
         s.autoPlay = function() {
+            var autoPlayIndex;
             var autoPlayTimes = typeof o.autoPlay === 'number' ? o.autoPlay : 4000;
-            var myTime = setInterval(function() {
+            for (var i = 0, len = s.sliderPositions.length; i < len; i++) {
+                if((s.getWrapperTranslate(s.$wrapper[0]) - s.sliderPositions[i]) > s.width/2) {
+                    autoPlayIndex = i + 1;
+                }
+            }
+            s.sliderTime = setInterval(function() {
                 s.slideItem.removeClass('active');
-                if(autoPlayIndex == s.sliderPositions.length - 1) {
-                    s.slideTo(autoPlayIndex);
+                if(autoPlayIndex >= s.sliderPositions.length - 1) {
+                    s.slideTo(s.sliderPositions.length - 1);
                     setTimeout(function() {
                         s.setWrapperTranstion(0);
                         s.setWrapperTranslate(s.sliderPositions[1]);
@@ -199,6 +204,9 @@
                 s.setWrapperTranstion(0);
                 s.setWrapperTranslate(s.sliderPositions[s.sliderPositions.length - 2]);
             }
+
+            // 暂停自动播放
+            if (s.sliderTime) clearTimeout(s.sliderTime);
         };
         s.onTouchmove = function(e) {
             e.preventDefault();
@@ -238,6 +246,9 @@
                 s.slideTo(index - 1);
                 s.slideItem.eq(index - 1).addClass('active');
             }
+
+            // 开始自动播放
+            if(o.autoPlay) s.autoPlay();
         };
     }
     
