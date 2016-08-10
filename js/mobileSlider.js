@@ -17,7 +17,7 @@
         s.$container = $(o.className);
         s.$wrapper = $(o.className + ' .slider-wrapper');
         s.width = s.$container.width();
-        s.sliderIndex = 1;
+        s.sliderIndex = 1; // 记录slider 当前的index
 
         for(var i = 0, len = $slideItem.length; i < len; i++) {
             s.paginationHtml += i == 0 ? '<span class="slider-pagination-item active"></span>': '<span class="slider-pagination-item"></span>';
@@ -191,10 +191,12 @@
             if(s.sliderIndex == s.sliderPositions.length - 1) {
                 s.setWrapperTranstion(0);
                 s.setWrapperTranslate(s.sliderPositions[1]);
+                s.sliderIndex = 1;
             }
             if(s.sliderIndex == 0) {
                 s.setWrapperTranstion(0);
                 s.setWrapperTranslate(s.sliderPositions[s.sliderPositions.length - 2]);
+                s.sliderIndex = s.sliderPositions.length - 2;
             }
             // 暂停自动播放
             if (s.sliderTime) clearTimeout(s.sliderTime);
@@ -219,14 +221,15 @@
 
             currentTranslate = -diff + startTranslate;
             s.setWrapperTranstion(0);
-            s.setWrapperTranslate(currentTranslate);
+            s.setWrapperTranslate(currentTranslate); // 更平滑的拖拽效果
         };
         s.onTouchEnd = function(e) {
             s.slideItem.removeClass('active');
+            console.log(s.sliderIndex)
             if(s.touches.diff > 20) {
 
-                if (s.sliderIndex == s.sliderPositions.length - 1) {
-                    s.sliderIndex = 2;
+                if (s.sliderIndex == s.sliderPositions.length - 1) { 
+                    s.sliderIndex = 2;  // 当index到最后一个时,也就是下一次跳转将到2
                 } else {
                     s.sliderIndex ++;
                 }
@@ -235,7 +238,7 @@
             } else if(s.touches.diff < -20) {
 
                 if(s.sliderIndex == 0) {
-                    s.sliderIndex = s.sliderPositions.length - 3;
+                    s.sliderIndex = s.sliderPositions.length - 3; //从右向左时,当index到第一个时,也就是下一次跳转将到倒数第三张图片
                 } else {
                     s.sliderIndex --;
                 }
