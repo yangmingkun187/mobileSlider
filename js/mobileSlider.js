@@ -17,6 +17,7 @@
         s.$container = $(o.className);
         s.$wrapper = $(o.className + ' .slider-wrapper');
         s.width = s.$container.width();
+        s.sliderIndex = 1;
 
         for(var i = 0, len = $slideItem.length; i < len; i++) {
             s.paginationHtml += i == 0 ? '<span class="slider-pagination-item active"></span>': '<span class="slider-pagination-item"></span>';
@@ -48,13 +49,9 @@
          ***** autoPlay  *****
          =============================== */
         s.autoPlay = function() {
-            var autoPlayIndex;
+            var autoPlayIndex = s.sliderIndex;
             var autoPlayTimes = typeof o.autoPlay === 'number' ? o.autoPlay : 4000;
-            for (var i = 0, len = s.sliderPositions.length; i < len; i++) {
-                if((s.getWrapperTranslate(s.$wrapper[0]) - s.sliderPositions[i]) > s.width/2) {
-                    autoPlayIndex = i + 1;
-                }
-            }
+
             s.sliderTime = setInterval(function() {
                 s.slideItem.removeClass('active');
                 if(autoPlayIndex >= s.sliderPositions.length - 1) {
@@ -70,7 +67,6 @@
                     s.slideItem.eq(autoPlayIndex).addClass('active');
                     autoPlayIndex++;
                 }
-                console.log(autoPlayIndex);
             }, autoPlayTimes);
         };
         /* =============================
@@ -163,8 +159,7 @@
             s.setWrapperTranslate(translate);
         };
         
-        var isTouched,
-            isMoved,
+        var isMoved,
             isTouchEvent,
             currentTranslate,
             newTranslate,
@@ -183,9 +178,7 @@
             if (e.originalEvent) e = e.originalEvent;
             isTouchEvent = e.type === 'touchstart';
             if (!isTouchEvent && 'which' in e && e.which === 3) return;
-
             isMoved = false;
-            isTouched = true;
             startObj.x = event.touches[0].pageX;
             startObj.y = event.touches[0].pageY;
             endObj.x = 0;
@@ -195,16 +188,14 @@
             var startY = s.touches.currentY = e.type === 'touchstart' ? e.targetTouches[0].pageY : e.pageY;
 
             // 这里是将复制出来的尽头元素移到原本的元素位置,更平滑的实现左右滑动
-            newTranslate = s.getWrapperTranslate(s.$wrapper[0]);
-            if(newTranslate == s.sliderPositions[s.sliderPositions.length - 1]) {
+            if(s.sliderIndex == s.sliderPositions.length - 1) {
                 s.setWrapperTranstion(0);
                 s.setWrapperTranslate(s.sliderPositions[1]);
             }
-            if(newTranslate == s.sliderPositions[0]) {
+            if(s.sliderIndex == 0) {
                 s.setWrapperTranstion(0);
                 s.setWrapperTranslate(s.sliderPositions[s.sliderPositions.length - 2]);
             }
-
             // 暂停自动播放
             if (s.sliderTime) clearTimeout(s.sliderTime);
         };
@@ -231,22 +222,27 @@
             s.setWrapperTranslate(currentTranslate);
         };
         s.onTouchEnd = function(e) {
-            isTouched = isMoved = false;
-            var index = 0;
-            for (var i = 0, len = s.sliderPositions.length; i < len; i++) {
-                if(s.sliderPositions[i] === startTranslate) {
-                    index = i;
-                }
-            }
             s.slideItem.removeClass('active');
             if(s.touches.diff > 20) {
-                s.slideTo(index + 1);
-                s.slideItem.eq(index + 1).addClass('active');
-            } else if(s.touches.diff < -20) {
-                s.slideTo(index - 1);
-                s.slideItem.eq(index - 1).addClass('active');
-            }
 
+                if (s.sliderIndex == s.sliderPositions.length - 1) {
+                    s.sliderIndex = 2;
+                } else {
+                    s.sliderIndex ++;
+                }
+                s.slideTo(s.sliderIndex);
+                s.slideItem.eq(s.sliderIndex).addClass('active');
+            } else if(s.touches.diff < -20) {
+
+                if(s.sliderIndex == 0) {
+                    s.sliderIndex = s.sliderPositions.length - 3;
+                } else {
+                    s.sliderIndex --;
+                }
+                s.slideTo(s.sliderIndex);
+                s.slideItem.eq(s.sliderIndex).addClass('active');
+            }
+            isMoved = false;
             // 开始自动播放
             if(o.autoPlay) s.autoPlay();
         };
