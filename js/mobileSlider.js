@@ -183,6 +183,7 @@
             startObj.y = event.touches[0].pageY;
             endObj.x = 0;
             endObj.y = 0;
+            s.touches.diff = 0;
 
             var startX = s.touches.currentX = e.type === 'touchstart' ? e.targetTouches[0].pageX : e.pageX;
             var startY = s.touches.currentY = e.type === 'touchstart' ? e.targetTouches[0].pageY : e.pageY;
@@ -225,7 +226,6 @@
         };
         s.onTouchEnd = function(e) {
             s.slideItem.removeClass('active');
-            console.log(s.sliderIndex)
             if(s.touches.diff > 20) {
 
                 if (s.sliderIndex == s.sliderPositions.length - 1) { 
